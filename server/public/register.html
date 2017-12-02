@@ -8,7 +8,7 @@
 </head>
 <body>
   <h2>Register</h2>
-  <form>
+
     <label for="cert_type">Type:</label>
     <select id="cert_type">
       <option>Individual</option>
@@ -67,9 +67,32 @@
     Total Cost: $xx.00
     <br />
 
-    <input type="submit" />
+    <button id="submit">Submit</button>
 
+    <br />
     Invoice:
-  </form>
+    <br />
+    <cert-ninja-invoice id="invoice"></cert-ninja-invoice>
+
+  <script src="src/cert-ninja-invoice.js"></script>
+  <script>
+    (function () {
+      document.querySelector('#submit').addEventListener('click', submitClicked);
+
+      function submitClicked() {
+        console.log('dostuff')
+
+        console.log('x', document.querySelector('#cert_type').value);
+        console.log('x', document.querySelector('#ethereum_address').value);
+
+        let invoice = document.querySelector('#invoice');
+        invoice.setAttribute('data', {
+          a: 2,
+          b: '12'
+        })
+      }
+
+    })();
+  </script>
 </body>
 </html>
