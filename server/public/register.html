@@ -79,17 +79,32 @@
     (function () {
       document.querySelector('#submit').addEventListener('click', submitClicked);
 
-      function submitClicked() {
+      async function submitClicked() {
         console.log('dostuff')
 
         console.log('x', document.querySelector('#cert_type').value);
         console.log('x', document.querySelector('#ethereum_address').value);
 
-        let invoice = document.querySelector('#invoice');
-        invoice.setAttribute('data', {
-          a: 2,
-          b: '12'
-        })
+      //   let invoice = document.querySelector('#invoice');
+      //   invoice.setAttribute('data', {
+      //     a: 2,
+      //     b: '12'
+      // })
+        let data = {foo: 'bar', baz: {a: 'b', c: 'd'}};
+
+        try {
+          let response = await fetch('/api/cert', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+          console.log('resposne', response);
+        } catch (error) {
+          console.log('error', error)
+        }
       }
 
     })();
