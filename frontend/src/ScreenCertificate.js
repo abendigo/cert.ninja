@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Ant from 'antd';
 import moment from 'moment';
+import SVGInline from "react-svg-inline";
 
 import ScreenBase from './ScreenBase';
 
@@ -69,27 +70,34 @@ export default class ScreenCertificate extends ScreenBase {
           ))}
         </div>
 
-        <div className="cert-hash">
-          <Ant.Popover placement="bottom" content={<pre>679517167b450673692471cf4d57ad9a3c41a16cbe7d4f05cb4eeeda55a7b434</pre>} title="Certificate Hash">
-            <Ant.Tag placement="bottom" color="blue">Certificate Hash</Ant.Tag>
-          </Ant.Popover>
+        <Ant.Row type="flex">
+          <Ant.Col span={18}>
+            <div className="cert-extra-checks">
+              <div>
+                <Ant.Icon type="check-circle" className="checkmark-small"/> Certificate hash matches certificate data.
+              </div>
+              <div>
+                <Ant.Icon type="check-circle" className="checkmark-small"/> Certificate has not been revoked.
+              </div>
+              <div>
+                <Ant.Icon type="check-circle" className="checkmark-small"/> Validated on <b>{date.format("[the] Do [day of] MMMM, YYYY")}</b>.
+              </div>
+            </div>
 
-          <Ant.Popover content={<pre>{JSON.stringify(cert, null, '    ')}</pre>} title="Raw Certificate">
-            <Ant.Tag color="blue">Raw Certificate</Ant.Tag>
-          </Ant.Popover>
-        </div>
+            <div className="cert-info-tags">
+              <Ant.Popover placement="top" content={<pre>679517167b450673692471cf4d57ad9a3c41a16cbe7d4f05cb4eeeda55a7b434</pre>} title="Certificate Hash">
+                <Ant.Tag color="blue">Certificate Hash</Ant.Tag>
+              </Ant.Popover>
 
-        <div>
-          <div>
-            <Ant.Icon type="check-circle" className="checkmark-small"/> Certificate hash matches certificate data.
-          </div>
-          <div>
-            <Ant.Icon type="check-circle" className="checkmark-small"/> Certificate has not been revoked.
-          </div>
-          <div>
-            <Ant.Icon type="check-circle" className="checkmark-small"/> Validated on <b>{date.format("[the] Do [day of] MMMM, YYYY")}</b>.
-          </div>
-        </div>
+              <Ant.Popover placement="top" content={<pre>{JSON.stringify(cert, null, '    ')}</pre>} title="Raw Certificate">
+                <Ant.Tag color="blue">Raw Certificate</Ant.Tag>
+              </Ant.Popover>
+            </div>
+          </Ant.Col>
+          <Ant.Col span={6}>
+            <SVGInline svg={require('./cert-ninja-seal.svg')} height="200px" />
+          </Ant.Col>
+        </Ant.Row>
       </div>
     );
   }
