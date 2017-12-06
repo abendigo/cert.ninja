@@ -1,11 +1,3 @@
-/*
-
-* owner is separate from admin, so we don't need to keep owner priv key on our server
-* model allows you to lookup either by cert hash or by address
-* you can see if a cert was valid at an earlier stage
-* admin can revoke a cert
-
-*/
 pragma solidity 0.4.18;
 
 contract CertNinja {
