@@ -101,18 +101,22 @@ contract CertNinja {
     // Public read-only interface
 
     // Returns 0 if address hasn't been certified
-    function lookupCertHash(address addr) external view returns(bytes32) {
+    function lookupAddress(address addr) external view returns(bytes32) {
         return addressToCertHash[addr];
     }
 
     // Returns (0, true) if no such certHash
-    // Returns (addr, true) if address was found and this is the current certHash
-    // Returns (addr, false) if there is a newer certHash for this address
+    // Returns (addr, true) if certHash was found and this is the current up-to-date certHash
+    // Returns (addr, false) if this hash was once valid but there is a newer certHash (potentially a revocation)
     function validateCertHash(bytes32 certHash) external view returns(address, bool) {
         address addr = certHashToAddress[certHash];
 
         if (addr == address(0)) return (0, true);
 
         return (addr, addressToCertHash[addr] == certHash);
+    }
+
+    function isInvoicePaid(bytes32 invoiceId) external view returns(bool) {
+        return invoicePaid[invoiceId];
     }
 }
