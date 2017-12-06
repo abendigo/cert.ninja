@@ -1,18 +1,36 @@
+/*
+
+* owner is separate from admin, so we don't need to keep owner priv key on our server
+* model allows you to lookup either by cert hash or by address
+* you can see if a cert was valid at an earlier stage
+* admin can revoke a cert
+
+*/
 pragma solidity 0.4.18;
 
 contract CertNinja {
     // Storage
 
-    address private owner;
-    mapping(address => bool) private admins;
+    address owner;
+    address feeCollector;
+    mapping(address => bool) admins;
     mapping(address => bytes32) addressToCertHash;
     mapping(bytes32 => address) certHashToAddress;
+    mapping(bytes32 => bool) invoicePaid;
+
+
+    // Events
+
+    event LogCertify(address indexed account, bytes32 indexed certHash);
+    event LogRevoke(address indexed account, bytes32 indexed certHash);
+    event LogInvoicePayment(bytes32 indexed invoiceId, address indexed addr, uint amount);
 
 
     // Owner interface
 
     function CertNinja() public {
         owner = msg.sender;
+        feeCollector = msg.sender;
     }
 
     modifier onlyOwner() {
@@ -22,6 +40,10 @@ contract CertNinja {
 
     function changeOwner(address newOwner) external onlyOwner {
         owner = newOwner;
+    }
+
+    function changeFeeCollector(address newFeeCollector) external onlyOwner {
+        feeCollector = newFeeCollector;
     }
 
     function addAdmin(address addr) external onlyOwner {
@@ -44,24 +66,57 @@ contract CertNinja {
         require(certHash != bytes32(0));
         addressToCertHash[addr] = certHash;
         certHashToAddress[certHash] = addr;
+        LogCertify(addr, certHash);
     }
 
     function revoke(address addr) external onlyAdmin {
+        bytes32 certHash = addressToCertHash[addr];
         addressToCertHash[addr] = bytes32(0);
+        LogRevoke(addr, certHash);
     }
 
 
-    // Public interface
+    // Fee collector interface
+
+    modifier onlyFeeCollectorOrOwner() {
+        require(msg.sender == feeCollector || msg.sender == owner);
+        _;
+    }
+
+    function collectFees() external onlyFeeCollectorOrOwner {
+        feeCollector.transfer(this.balance);
+    }
+
+
+    // Public writeable interface
+
+    function() external payable {
+        revert(); // must use payInvoice function to pay invoices
+    }
+
+    function payInvoice(bytes32 invoiceId, uint amount, uint8 v, bytes32 r, bytes32 s) external payable {
+        uint messageHash = uint(keccak256(this, msg.sender, invoiceId, amount));
+        address signer = ecrecover(keccak256("\x19Ethereum Signed Message:\n32", messageHash), v, r, s);
+
+        if (!admins[signer]) revert();
+        if (amount != msg.value) revert();
+
+        invoicePaid[invoiceId] = true;
+        LogInvoicePayment(invoiceId, msg.sender, amount);
+    }
+
+
+    // Public read-only interface
 
     // Returns 0 if address hasn't been certified
-    function lookupCertHash(address addr) public view returns(bytes32) {
+    function lookupCertHash(address addr) external view returns(bytes32) {
         return addressToCertHash[addr];
     }
 
     // Returns (0, true) if no such certHash
     // Returns (addr, true) if address was found and this is the current certHash
     // Returns (addr, false) if there is a newer certHash for this address
-    function validateCertHash(bytes32 certHash) public view returns(address, bool) {
+    function validateCertHash(bytes32 certHash) external view returns(address, bool) {
         address addr = certHashToAddress[certHash];
 
         if (addr == address(0)) return (0, true);
