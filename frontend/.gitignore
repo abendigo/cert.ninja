@@ -1,0 +1,6 @@
+/coverage
+/dist
+/package
+/build
+/node_modules
+npm-debug.log*
