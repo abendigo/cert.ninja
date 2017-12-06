@@ -67,5 +67,5 @@ app.use(api.allowedMethods());
 app.use(router.routes());
 app.use(serve('public'));
 
-http.createServer(app.callback()).listen(3000);
-https.createServer(app.callback()).listen(3001);
+http.createServer(app.callback()).listen(3001);
+https.createServer(app.callback()).listen(3002);
