@@ -14,7 +14,7 @@ export default class ScreenCertifyAddress extends ScreenBase {
         name: 'ethaddr',
         namePretty: 'Ethereum Address',
         desc: <div>The Ethereum address you wish to certify.</div>,
-        placeholder: 'an ethereum address',
+        placeholder: 'ethereum address',
         type: 'input',
         required: true,
       },
@@ -22,7 +22,16 @@ export default class ScreenCertifyAddress extends ScreenBase {
         name: 'email',
         namePretty: 'Email Address',
         desc: <div>We will send you an email with a URL that you must click.</div>,
-        placeholder: 'a valid email address',
+        placeholder: 'email address',
+        type: 'input',
+        cost: 0,
+        time: '5 minutes',
+      },
+      {
+        name: 'domain',
+        namePretty: 'Domain Name',
+        desc: <div>We will provide a file that you must put on an https URL on the provided domain.</div>,
+        placeholder: 'domain name',
         type: 'input',
         cost: 0,
         time: '5 minutes',
@@ -31,16 +40,16 @@ export default class ScreenCertifyAddress extends ScreenBase {
         name: 'sms',
         namePretty: 'SMS (Text Message)',
         desc: <div>We will send an SMS to a phone number containing a short code that you must enter on our site.</div>,
-        placeholder: 'a phone number (cell-phone only)',
+        placeholder: 'phone number (cell-phone only)',
         type: 'input',
         cost: 1,
         time: '10 minutes',
       },
       {
-        name: 'voice',
+        name: 'phone',
         namePretty: 'Phone Call',
         desc: <div>We will call your number and read out a short code that you must enter on our site.</div>,
-        placeholder: 'a phone number',
+        placeholder: 'phone number',
         type: 'input',
         cost: 1,
         time: '1 hour',
@@ -60,8 +69,8 @@ export default class ScreenCertifyAddress extends ScreenBase {
         <h1>Certify Address</h1>
 
         {fields.map(f => (
-          <Ant.Card title={f.namePretty} style={{ marginTop: 15, }}>
-            <Ant.Row type="flex" key={f.name}>
+          <Ant.Card key={f.name} title={f.namePretty} style={{ marginTop: 15, }}>
+            <Ant.Row type="flex">
               <Ant.Col span={6}>
                 {f.desc}
               </Ant.Col>

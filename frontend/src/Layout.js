@@ -9,19 +9,16 @@ import 'antd/dist/antd.css';
 
 import ScreenHomePage from './ScreenHomePage';
 import ScreenCertifyAddress from './ScreenCertifyAddress';
+import ScreenCertificate from './ScreenCertificate';
 
 
 export default class SCLayout extends React.Component {
   constructor(props) {
     super(props);
 
-    let selectedTab;
-
-    selectedTab = location.pathname.substr(1);
-
     this.state = {
       collapsed: false,
-      selectedTab: selectedTab,
+      selectedTab: location.pathname,
     };
   }
 
@@ -38,12 +35,14 @@ export default class SCLayout extends React.Component {
               style={{ lineHeight: '64px' }}
               onClick={this.menuClicked.bind(this)}
             >
-              <Menu.Item key="certify-address">Certify Address</Menu.Item>
+              <Menu.Item key="/">Home</Menu.Item>
+              <Menu.Item key="/certify-address">Certify Address</Menu.Item>
             </Menu>
           </Header>
 
           <Switch>
             <Route path="/certify-address" component={ScreenCertifyAddress} />
+            <Route path="/certificate/:certHash" exact component={ScreenCertificate} />
             <Route path="/" exact component={ScreenHomePage} />
             <Redirect to="/" />
           </Switch>
@@ -58,6 +57,6 @@ export default class SCLayout extends React.Component {
 
   menuClicked({key}) {
     this.setState({ selectedTab: key, });
-    this.refs.router.history.push(`/${key}`);
+    this.refs.router.history.push(key);
   }
 }
