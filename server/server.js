@@ -1,12 +1,22 @@
 // node includes
 const http = require('http');
-const https = require('https');
 
 // koa includes
 const Koa = require('koa');
 const logger = require('koa-logger')
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+
+// db
+const lmdb = require('node-lmdb');
+const env = new lmdb.Env();
+env.open({
+  path: __dirname + "/data",
+});
+const db = env.openDbi({
+  name: "rates",
+  create: true
+})
 
 // rates in USD pennies
 const rates = {
@@ -40,5 +50,18 @@ app.use(logger());
 app.use(api.routes());
 app.use(api.allowedMethods());
 
-http.createServer(app.callback()).listen(3001);
-https.createServer(app.callback()).listen(3002);
+const server = http.createServer(app.callback()).listen(3001);
+
+function shutdown() {
+  console.log('shutting down');
+
+  server.close(() => {
+    db.close();
+    env.close();
+
+    process.exit(0);
+  })
+}
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
