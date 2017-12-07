@@ -9,27 +9,48 @@ const bodyParser = require('koa-bodyparser');
 
 // db
 const lmdb = require('node-lmdb');
+
+
+
+
 const env = new lmdb.Env();
 env.open({
-  path: __dirname + "/data",
+  path: __dirname + '/data',
 });
 const db = env.openDbi({
-  name: "rates",
+  name: 'stuff',
   create: true
-})
+});
 
-// rates in USD pennies
-const rates = {
-  base: 1000,
-  email: 0,
-  domain: 0,
-  sms: 100,
-  voice: 500,
-  snail: 1500
-};
+const txn = env.beginTxn();
+const r = txn.getString(db, 'rates');
 
-// 1 eth in USD pennies
-const conversion = 42500;
+let rates;
+if (r) {
+  rates = JSON.parse(r);
+} else {
+  console.log('SEEDING RATES');
+  rates = {
+    base: 1000,
+    email: 0,
+    domain: 0,
+    sms: 100,
+    voice: 500,
+    snail: 1500
+  };
+  txn.putString(db, 'rates', JSON.stringify(rates));
+}
+
+let ethusd = txn.getNumber(db, 'ethusd');
+if (!ethusd) {
+  console.log('SEEDING ETHUSD');
+  ethusd = 45000; // $450.00
+  txn.putNumber(db, 'ethusd', ethusd);
+}
+
+txn.commit();
+
+
 
 
 const api = new Router({
@@ -40,7 +61,7 @@ api.get('/get-rates', async (ctx) => {
   ctx.response.status = 200;
   ctx.response.body = {
     prices: rates,
-    conversion
+    ethusd: ethusd
   };
 });
 
@@ -50,7 +71,12 @@ app.use(logger());
 app.use(api.routes());
 app.use(api.allowedMethods());
 
-const server = http.createServer(app.callback()).listen(3001);
+const server = http.createServer(app.callback()).listen(3001, () => {
+  console.log('SERVER STARTED');
+
+  process.on('SIGTERM', shutdown);
+  process.on('SIGINT', shutdown);
+});
 
 function shutdown() {
   console.log('shutting down');
@@ -63,5 +89,4 @@ function shutdown() {
   })
 }
 
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+
