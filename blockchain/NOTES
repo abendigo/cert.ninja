@@ -1,0 +1,11 @@
+PARITY
+
+cleanup:
+rm -rf ~/.local/share/io.parity.ethereum
+
+parity --chain chain.json account import adminkey.json
+
+parity --chain chain.json --unlock 0x2b61a154146aa7d2fbb731c6054d9c84b168fab3 --password <(echo -n asdfasdf)
+
+admin addr
+0x2b61a154146aa7d2fbb731c6054d9c84b168fab3
