@@ -45,10 +45,31 @@ const env = new lmdb.Env();
 
 env.open({
   path: __dirname + '/data',
+  maxDbs: 100,
+  mapSize: 200*1024*1024*1024,
 });
 
+// keys are invoice secrets
 const dbInvoice = env.openDbi({
   name: 'invoice',
+  create: true
+});
+
+// keys are invoice secrets
+const dbSecret = env.openDbi({
+  name: 'secret',
+  create: true
+});
+
+// keys are certHashes
+const dbCert = env.openDbi({
+  name: 'cert',
+  create: true
+});
+
+// keys are ethereum addresses
+const dbCertHash = env.openDbi({
+  name: 'certHash',
   create: true
 });
 
