@@ -1,10 +1,13 @@
 // node includes
 const http = require('http');
 const crypto = require('crypto');
+const fs = require('fs');
 
 // misc includes
 const ethUtil = require('ethereumjs-util');
 const BigNumber = require('bignumber.js');
+const yaml = require('js-yaml');
+
 
 // koa includes
 const Koa = require('koa');
@@ -20,22 +23,9 @@ const lmdb = require('node-lmdb');
 
 // config
 
-const pricing = {
-  base: 1000,
-  email: 0,
-  domain: 0,
-  sms: 100,
-  phone: 500,
-  snailmail: 1500
-};
+let config = yaml.safeLoad(fs.readFileSync('./config.yaml', 'utf8'));
 
 let ethUsd = 45000;
-
-const adminPrivateKey = '523ea64ce77c21dab4f66799a35b8113848ee8ec9bdfa40fc7d23ec6deed7491';
-const adminAddress = 'adf837a3a7c82e8d019d344c77bc3131187098d8';
-
-const paymentInterval = 86400 * 7;
-const contractAddr = '0x2b61a154146aa7d2fbb731c6054d9c84b168fab3';
 
 
 
@@ -86,7 +76,8 @@ api.get('/get-rates', async (ctx) => {
   ctx.response.status = 200;
   ctx.headers['Access-Control-Allow-Origin'] = '*';
   ctx.response.body = {
-    pricing, ethusd,
+    pricing: config.pricing,
+    ethusd,
   };
 });
 
@@ -98,12 +89,12 @@ api.post('/create-invoice', async (ctx) => {
     request: {},
   };
 
-  let amountCents = pricing.base;
+  let amountCents = config.pricing.base;
 
   for (let method of ['email', 'domain', 'sms', 'phone', 'snailmail']) {
     if (ctx.request.body[method] !== undefined) {
       invoice.request[method] = ctx.request.body[method];
-      amountCents += pricing[method];
+      amountCents += config.pricing[method];
     }
   }
 
@@ -112,7 +103,7 @@ api.post('/create-invoice', async (ctx) => {
   invoice.amount = ethToWei(new BigNumber(amountCents).div(ethUsd)).toString();
   invoice.invoiceInitiated = getUnixTime();
 
-  invoice.payBy = invoice.invoiceInitiated + paymentInterval;
+  invoice.payBy = invoice.invoiceInitiated + (parseInt(config.paymentExpiryDays) * 86400);
 
   invoice.sig = signInvoice(invoice);
 
@@ -207,14 +198,14 @@ function signWithPrivateKey(msg, privateKey) {
 function signInvoice(invoice) {
 console.log(invoice);
     let raw = [
-        normalizeComponent(contractAddr, 160),
+        normalizeComponent(config.contractAddr, 160),
         normalizeComponent(invoice.request.ethAddr, 160),
         normalizeComponent(invoice.invoiceId, 256),
         normalizeComponent(new BigNumber(invoice.amount), 256),
         normalizeComponent(invoice.payBy, 64),
     ].join('');
 
-    return sig = signWithPrivateKey(ethUtil.sha3(new Buffer(raw, 'hex')), adminPrivateKey);
+    return sig = signWithPrivateKey(ethUtil.sha3(new Buffer(raw, 'hex')), config.adminKey.private);
 }
 
 function getUnixTime() {

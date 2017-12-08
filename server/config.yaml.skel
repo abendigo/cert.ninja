@@ -1,0 +1,19 @@
+pricing:
+  base: 1000
+  email: 0
+  domain: 0
+  sms: 100
+  phone: 500
+  snailmail: 1500
+
+adminKey:
+  private: change-me
+  address: change-me
+
+paymentExpiryDays: 7
+
+contractAddr: change-me
+
+mailgun:
+  url: 'https://api.mailgun.net/v3/cert.ninja/messages'
+  apiKey: change-me

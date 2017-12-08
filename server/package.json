@@ -3,6 +3,7 @@
   "dependencies": {
     "bignumber.js": "^5.0.0",
     "ethereumjs-util": "^5.1.2",
+    "js-yaml": "^3.10.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-cors": "0.0.16",
