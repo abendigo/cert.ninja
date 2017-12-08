@@ -8,6 +8,20 @@ import ScreenBase from './ScreenBase';
  
 
 export default class ScreenCertifyAddress extends ScreenBase {
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+
+    let myInit = { method: 'GET', mode: 'cors', cache: 'default' };
+
+    fetch('http://localhost:3001/api/get-rates', myInit).then((response) => {
+      return response.json();
+    }).then((json) => {
+      this.setState({ pricing: json, });
+    });
+  }
+
   myRender() {
     let fields = [
       {
@@ -24,7 +38,6 @@ export default class ScreenCertifyAddress extends ScreenBase {
         desc: <div>We will send you an email with a URL that you must click.</div>,
         placeholder: 'email address',
         type: 'input',
-        cost: 0,
         time: '5 minutes',
       },
       {
@@ -33,7 +46,6 @@ export default class ScreenCertifyAddress extends ScreenBase {
         desc: <div>We will provide a file that you must put on an https URL on the provided domain.</div>,
         placeholder: 'domain name',
         type: 'input',
-        cost: 0,
         time: '5 minutes',
       },
       {
@@ -42,7 +54,6 @@ export default class ScreenCertifyAddress extends ScreenBase {
         desc: <div>We will send an SMS to a phone number containing a short code that you must enter on our site.</div>,
         placeholder: 'phone number (cell-phone only)',
         type: 'input',
-        cost: 1,
         time: '10 minutes',
       },
       {
@@ -51,7 +62,6 @@ export default class ScreenCertifyAddress extends ScreenBase {
         desc: <div>We will call your number and read out a short code that you must enter on our site.</div>,
         placeholder: 'phone number',
         type: 'input',
-        cost: 1,
         time: '1 hour',
       },
       {
@@ -59,10 +69,11 @@ export default class ScreenCertifyAddress extends ScreenBase {
         namePretty: 'Mailing Address',
         desc: <div>We will send a letter via post to this address containing a short code that you must enter on our site.</div>,
         type: 'mailing',
-        cost: 15,
         time: '2 weeks',
       }
     ];
+
+    if (!this.state.pricing) return <div>Loading...</div>;
 
     return (
       <div className="certify-address">
@@ -96,8 +107,8 @@ export default class ScreenCertifyAddress extends ScreenBase {
               </Ant.Col>
 
               <Ant.Col span={4}>
-                {f.cost !== undefined && <div>
-                  Cost: ${f.cost.toFixed(2)} (0.019 ETH)
+                {this.state.pricing.pricing[f.name] && <div>
+                  Cost: ${this.state.pricing.pricing[f.name].toFixed(2)} (0.019 ETH)
                 </div>}
 
                 {f.time !== undefined && <div>

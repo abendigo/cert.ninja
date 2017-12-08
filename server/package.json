@@ -1,8 +1,11 @@
 {
   "name": "cert.ninja",
   "dependencies": {
+    "bignumber.js": "^5.0.0",
+    "ethereumjs-util": "^5.1.2",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
+    "koa-cors": "0.0.16",
     "koa-logger": "^3.1.0",
     "koa-router": "^7.3.0",
     "node-lmdb": "^0.4.13"
