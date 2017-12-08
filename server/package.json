@@ -9,6 +9,7 @@
     "koa-cors": "0.0.16",
     "koa-logger": "^3.1.0",
     "koa-router": "^7.3.0",
-    "node-lmdb": "^0.4.13"
+    "node-lmdb": "^0.4.13",
+    "request": "^2.83.0"
   }
 }

@@ -7,7 +7,7 @@ const fs = require('fs');
 const ethUtil = require('ethereumjs-util');
 const BigNumber = require('bignumber.js');
 const yaml = require('js-yaml');
-
+const lmdb = require('node-lmdb');
 
 // koa includes
 const Koa = require('koa');
@@ -16,8 +16,8 @@ const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const cors = require('koa-cors');
 
-// db
-const lmdb = require('node-lmdb');
+// cert ninja includes
+const validators = require('./validators.js');
 
 
 
