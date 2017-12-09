@@ -77,7 +77,7 @@ api.get('/get-rates', async (ctx) => {
   ctx.headers['Access-Control-Allow-Origin'] = '*';
   ctx.response.body = {
     pricing: config.pricing,
-    ethusd,
+    ethUsd,
   };
 });
 
@@ -114,7 +114,7 @@ api.post('/create-invoice', async (ctx) => {
 
 
   ctx.response.status = 200;
-  ctx.response.body = invoice;
+  ctx.response.body = { result: 'OK', };
 });
 
 
@@ -196,7 +196,6 @@ function signWithPrivateKey(msg, privateKey) {
 }
 
 function signInvoice(invoice) {
-console.log(invoice);
     let raw = [
         normalizeComponent(config.contractAddr, 160),
         normalizeComponent(invoice.request.ethAddr, 160),
