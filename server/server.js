@@ -115,6 +115,31 @@ api.post('/create-invoice', async (ctx) => {
 
   ctx.response.status = 200;
   ctx.response.body = { result: 'OK', };
+
+
+  let link = `https://cert.ninja/request/${invoice.invoiceSecret}`;
+
+  let emailBody = `Hello!
+
+We received a certificate request for your email. To continue processing this request, please click here:
+
+${link}
+
+If you did not request this email, please disregard or email support@cert.ninja
+
+Regards,
+
+Cert Ninja
+https://cert.ninja
+`;
+
+  if (config.mailgun && config.mailgun.apiKey) {
+    validators.sendMailgun(config, 'noreply@cert.ninja', invoice.request.email, 'Your cert.ninja Certificate Request', emailBody, (err, resp) => {
+    });
+  } else {
+    console.log(`Mailgun not configured: Would've sent email to ${invoice.request.email}:`);
+    console.log(emailBody);
+  }
 });
 
 

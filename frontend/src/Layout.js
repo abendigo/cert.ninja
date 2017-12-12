@@ -10,6 +10,7 @@ import 'antd/dist/antd.css';
 import ScreenHomePage from './ScreenHomePage';
 import ScreenCertifyAddress from './ScreenCertifyAddress';
 import ScreenCertificate from './ScreenCertificate';
+import ScreenRequest from './ScreenRequest';
 
 
 export default class SCLayout extends React.Component {
@@ -43,6 +44,7 @@ export default class SCLayout extends React.Component {
           <Switch>
             <Route path="/certify-address" component={ScreenCertifyAddress} />
             <Route path="/certificate/:certHash" exact component={ScreenCertificate} />
+            <Route path="/request/:invoiceSecret" exact component={ScreenRequest} />
             <Route path="/" exact component={ScreenHomePage} />
             <Redirect to="/" />
           </Switch>

@@ -14,9 +14,11 @@ export default class ScreenCertifyAddress extends ScreenBase {
     this.state = {
     };
 
-    let myInit = { method: 'GET', mode: 'cors', cache: 'default' };
-
-    fetch('http://localhost:3001/api/get-rates', myInit).then((response) => {
+    fetch('http://localhost:3001/api/get-rates', {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'default',
+    }).then((response) => {
       return response.json();
     }).then((json) => {
       this.setState({ pricing: json, });
