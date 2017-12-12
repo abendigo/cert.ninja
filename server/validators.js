@@ -17,12 +17,33 @@ function sendMailgun(config, from, to, subject, text, cb) {
   }, cb);
 }
 
+function validateDomain(domain, secret, callback) {
+  fetchWellKnownFile(domain, (err, res) => {
+    if (err) {
+      callback(err);
+    } else {
+      if (secret && res.secret && secret === res) {
+        callback();
+      } else {
+        callback({
+          message: `Secrets don't match.`,
+          expected: secret,
+          found: res.secret
+        });
+      }
+    }
+  });
+}
+
 
 function fetchWellKnownFile(domain, callback) {
   function _responseHandler(res, body, callback) {
     console.log('3', res.statusCode);
     if (res.statusCode == 200) {
       console.log('4', body)
+      callback(undefined, {
+        secret: body
+      })
     } else {
       console.log('oops')
       callback({
@@ -59,4 +80,5 @@ function fetchWellKnownFile(domain, callback) {
 module.exports = {
   sendMailgun,
   fetchWellKnownFile,
+  validateDomain,
 };
