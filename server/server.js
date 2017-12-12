@@ -8,6 +8,7 @@ const ethUtil = require('ethereumjs-util');
 const BigNumber = require('bignumber.js');
 const yaml = require('js-yaml');
 const lmdb = require('node-lmdb');
+const Web3 = require('web3');
 
 // koa includes
 const Koa = require('koa');
@@ -18,6 +19,7 @@ const cors = require('koa-cors');
 
 // cert ninja includes
 const validators = require('./validators.js');
+const cnUtils = require('../contract/scripts/cnUtils.js');
 
 
 
@@ -26,6 +28,12 @@ const validators = require('./validators.js');
 let config = yaml.safeLoad(fs.readFileSync('./config.yaml', 'utf8'));
 
 let ethUsd = 45000;
+
+let web3 = new Web3();
+web3.setProvider(new web3.providers.HttpProvider(config.web3Endpoint));
+
+let { CertNinjaContract, } = cnUtils.loadCertNinjaContract(web3);
+let certNinjaInstance = CertNinjaContract.at(cnUtils.normalizeAddr(config.contractAddr));
 
 
 
@@ -98,11 +106,13 @@ api.post('/create-invoice', async (ctx) => {
     }
   }
 
+  if (ctx.request.body['domain']) invoice.domainKey = getRandToken();
+
   invoice.request.ethAddr = ctx.request.body.ethAddr;
 
   invoice.amount = ethToWei(new BigNumber(amountCents).div(ethUsd)).toString();
   invoice.invoiceInitiated = getUnixTime();
-
+  invoice.contractAddr = config.contractAddr;
   invoice.payBy = invoice.invoiceInitiated + (parseInt(config.paymentExpiryDays) * 86400);
 
   invoice.sig = signInvoice(invoice);
@@ -142,11 +152,14 @@ https://cert.ninja
   }
 });
 
-
 api.post('/invoice-status', async (ctx) => {
-  const txn = env.beginTxn({ readOnly: true, });
-  let invoiceJson = txn.getString(dbInvoice, ctx.request.body.invoiceSecret);
-  txn.commit();
+  let invoiceJson;
+
+  {
+    const txn = env.beginTxn({ readOnly: true, });
+    invoiceJson = txn.getString(dbInvoice, ctx.request.body.invoiceSecret);
+    txn.commit();
+  }
 
   if (!invoiceJson) {
     ctx.response.status = 404;
@@ -155,18 +168,45 @@ api.post('/invoice-status', async (ctx) => {
 
   let invoice = JSON.parse(invoiceJson);
 
-  ctx.response.status = 200;
-  ctx.response.body = invoice;
-});
+  if (!invoice.validated || !invoice.validated.email) {
+    // On first load of this end-point, validate email
+    const txn = env.beginTxn();
+    invoiceJson = txn.getString(dbInvoice, ctx.request.body.invoiceSecret);
+    invoice = JSON.parse(invoiceJson);
+    if (!invoice.validated) invoice.validated = {};
+    if (!invoice.validated.email) invoice.validated.email = getUnixTime();
+    txn.putString(dbInvoice, invoice.invoiceSecret, JSON.stringify(invoice));
+    txn.commit();
+  }
 
-api.get('/test', (ctx) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      ctx.response.status = 200;
-      ctx.response.body = {};
-      resolve();
-    }, 2000);
-  });
+  if (invoice.paid) {
+    ctx.response.status = 200;
+    ctx.response.body = invoice;
+  } else {
+    return new Promise((resolve, reject) => {
+      certNinjaInstance.isInvoicePaid.call('0x'+invoice.invoiceId, (err, paid) => {
+        if (err) {
+          console.error("web3 error: " + err);
+          reject();
+          return;
+        }
+
+        if (paid) {
+          const txn = env.beginTxn({ readOnly: true, });
+          invoiceJson = txn.getString(dbInvoice, ctx.request.body.invoiceSecret);
+          invoice = JSON.parse(invoiceJson);
+          invoice.paid = true;
+          txn.putString(dbInvoice, invoice.invoiceSecret, JSON.stringify(invoice));
+          txn.commit();
+        }
+
+        ctx.response.status = 200;
+        ctx.response.body = invoice;
+
+        resolve();
+      });
+    });
+  }
 });
 
 
