@@ -87,6 +87,8 @@ contract CertNinja {
     }
 
     function payInvoice(bytes32 invoiceId, uint amount, uint64 payBy, uint8 v, bytes32 r, bytes32 s) external payable {
+        if (invoicePaid[invoiceId]) revert();
+
         uint messageHash = uint(keccak256(this, msg.sender, invoiceId, amount, payBy));
         address signer = ecrecover(keccak256("\x19Ethereum Signed Message:\n32", messageHash), v, r, s);
 

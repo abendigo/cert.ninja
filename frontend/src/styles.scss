@@ -61,10 +61,12 @@
 }
 
 .validation-screen {
-  font-size: 110%;
+  font-size: 120%;
 
   .validation-row {
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px dotted #ccc;
   }
 }

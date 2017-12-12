@@ -5,7 +5,6 @@ const fs = require('fs');
 
 // misc includes
 const ethUtil = require('ethereumjs-util');
-const BigNumber = require('bignumber.js');
 const yaml = require('js-yaml');
 const lmdb = require('node-lmdb');
 const Web3 = require('web3');
@@ -117,6 +116,8 @@ api.post('/create-invoice', async (ctx) => {
 
   invoice.sig = signInvoice(invoice);
 
+  invoice.validated = {};
+
 
   const txn = env.beginTxn();
   txn.putString(dbInvoice, invoice.invoiceSecret, JSON.stringify(invoice));
@@ -192,10 +193,11 @@ api.post('/invoice-status', async (ctx) => {
         }
 
         if (paid) {
-          const txn = env.beginTxn({ readOnly: true, });
+          const txn = env.beginTxn();
           invoiceJson = txn.getString(dbInvoice, ctx.request.body.invoiceSecret);
           invoice = JSON.parse(invoiceJson);
           invoice.paid = true;
+          invoice.validated.ethAddr = getUnixTime();
           txn.putString(dbInvoice, invoice.invoiceSecret, JSON.stringify(invoice));
           txn.commit();
         }
@@ -265,18 +267,18 @@ function signWithPrivateKey(msg, privateKey) {
     let sig = ethUtil.ecsign(msgHash, new Buffer(privateKey, 'hex'));
     sig.r = sig.r.toString('hex');
     sig.s = sig.s.toString('hex');
-    sig.v = normalizeComponent(sig.v, 8);
+    sig.v = cnUtils.normalizeComponent(sig.v, 8);
 
     return sig;
 }
 
 function signInvoice(invoice) {
     let raw = [
-        normalizeComponent(config.contractAddr, 160),
-        normalizeComponent(invoice.request.ethAddr, 160),
-        normalizeComponent(invoice.invoiceId, 256),
-        normalizeComponent(new BigNumber(invoice.amount), 256),
-        normalizeComponent(invoice.payBy, 64),
+        cnUtils.normalizeComponent(config.contractAddr, 160),
+        cnUtils.normalizeComponent(invoice.request.ethAddr, 160),
+        cnUtils.normalizeComponent(invoice.invoiceId, 256),
+        cnUtils.normalizeComponent(new BigNumber(invoice.amount), 256),
+        cnUtils.normalizeComponent(invoice.payBy, 64),
     ].join('');
 
     return sig = signWithPrivateKey(ethUtil.sha3(new Buffer(raw, 'hex')), config.adminKey.private);
@@ -284,19 +286,4 @@ function signInvoice(invoice) {
 
 function getUnixTime() {
   return Math.floor(Date.now() / 1000);
-}
-
-function normalizeComponent(inp, bits) {
-    if (inp instanceof Buffer) inp = inp.toString('hex');
-    else if (typeof(inp) === 'number') inp = (new BigNumber(inp)).floor().toString(16);
-    else if (typeof(inp) === 'string') {}
-    else if (typeof(inp) === 'object' && inp.isBigNumber) inp = inp.floor().toString(16);
-    else throw("unexpected type: " + typeof(inp));
-
-    if (inp.substring(0, 2) === '0x') inp = inp.substring(2);
-    inp = "0".repeat(Math.max(0, (bits/4) - inp.length)) + inp;
-
-    if (inp.length > (bits/4)) throw("input too long");
-
-    return inp;
 }

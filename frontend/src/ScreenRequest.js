@@ -15,17 +15,28 @@ export default class ScreenCertificate extends ScreenBase {
     this.state = {
     };
 
+    this.fetchInvoice();
+    this.fetchInvoiceInterval = setInterval(() => this.fetchInvoice(), 5000);
+  }
+
+  componentWillUnmount() {
+    if (this.fetchInvoiceInterval) {
+      clearInterval(this.fetchInvoiceInterval);
+      delete this.fetchInvoiceInterval;
+    }
+  }
+
+  fetchInvoice() {
     fetch('http://localhost:3001/api/invoice-status', {
       method: 'POST',
       mode: 'cors',
-      body: JSON.stringify({ invoiceSecret: props.match.params.invoiceSecret, }),
+      body: JSON.stringify({ invoiceSecret: this.props.match.params.invoiceSecret, }),
       headers: {
         'Content-Type': 'application/json',
       },
     }).then((response) => {
       return response.json();
     }).then((json) => {
-      console.log("YEY",json);
       this.setState({ invoice: json, }, () => this.invoiceReady());
     });
   }
@@ -38,7 +49,7 @@ export default class ScreenCertificate extends ScreenBase {
       this.web3.setProvider(window.web3.currentProvider);
 
       let { CertNinjaContract, } = cnUtils.loadCertNinjaContract(this.web3);
-      let certNinjaInstance = CertNinjaContract.at(this.state.invoice.contractAddr);
+      this.certNinjaInstance = CertNinjaContract.at(this.state.invoice.contractAddr);
 
       this.web3.version.getNetwork((err, networkId) => {
         this.setState({ networkId, });
@@ -46,6 +57,11 @@ export default class ScreenCertificate extends ScreenBase {
           this.setState({ accounts, });
         });
       });
+
+      if (!this.state.paymentTx) {
+        let tx = localStorage.getItem(`cert-ninja|invoice-tx|${this.state.invoice.invoiceId}`);
+        if (tx) this.setState({ paymentTx: tx, });
+      }
     } else {
       this.setState({ web3Available: false, });
     }
@@ -68,7 +84,7 @@ export default class ScreenCertificate extends ScreenBase {
       } else if (cnUtils.normalizeAddr(this.state.accounts[0]) !== cnUtils.normalizeAddr(this.state.invoice.request.ethAddr)) {
         paymentInfo = <div>Unrecognized ethereum address. Please change to {this.state.invoice.request.ethAddr}</div>;
       } else {
-        paymentInfo = <Ant.Button>Pay {weiToEth(new BigNumber(this.state.invoice.amount)).toFixed(6)} ETH Now</Ant.Button>;
+        paymentInfo = <Ant.Button type="primary" onClick={this.payInvoice.bind(this)}>Pay {weiToEth(new BigNumber(this.state.invoice.amount)).toFixed(6)} ETH Now</Ant.Button>;
       }
     }
 
@@ -99,13 +115,17 @@ export default class ScreenCertificate extends ScreenBase {
     addRow(
       'Payment Status',
       this.state.invoice.paid ? <Ant.Tag color="green">Paid</Ant.Tag> : <Ant.Tag color="red">Unpaid</Ant.Tag>,
-      paymentInfo,
+      (<div>
+        <div>{paymentInfo}</div>
+        { this.state.paymentError && <div style={{ color: 'red', }}>{this.state.paymentError}</div> }
+        { this.state.paymentTx && <div style={{ color: 'green', }}>Payment transaction created: {this.state.paymentTx}</div> }
+      </div>),
     );
 
     addRow(
       'Ethereum Address',
-      this.state.invoice.paid ? <Ant.Tag color="green">Validated</Ant.Tag> : <Ant.Tag color="red">Not validated</Ant.Tag>,
-      !this.state.invoice.paid && "Pay the invoice to validate your address.",
+      this.state.invoice.validated.ethAddr ? <Ant.Tag color="green">Validated</Ant.Tag> : <Ant.Tag color="red">Not validated</Ant.Tag>,
+      !this.state.invoice.validated.ethAddr && "Pay the invoice to validate your address.",
     );
 
     if (this.state.invoice.request.domain) {
@@ -147,6 +167,33 @@ export default class ScreenCertificate extends ScreenBase {
         {rows}
       </div>
     );
+  }
+
+
+  payInvoice() {
+    let args = [
+      "0x"+cnUtils.normalizeComponent(this.state.invoice.invoiceId, 256),
+      "0x"+cnUtils.normalizeComponent(new BigNumber(this.state.invoice.amount), 256),
+      "0x"+cnUtils.normalizeComponent(new BigNumber(this.state.invoice.payBy), 64),
+      "0x"+cnUtils.normalizeComponent(this.state.invoice.sig.v, 8),
+      "0x"+cnUtils.normalizeComponent(this.state.invoice.sig.r, 256),
+      "0x"+cnUtils.normalizeComponent(this.state.invoice.sig.s, 256),
+    ];
+
+    let opts = {
+      value: "0x"+cnUtils.normalizeComponent(new BigNumber(this.state.invoice.amount), 256),
+    };
+
+    cnUtils.sendTX(web3, this.certNinjaInstance, 'payInvoice', this.state.accounts[0], null, '0x'+this.state.invoice.contractAddr, args, opts, false, (err, tx) => {
+      if (err) {
+        console.warn(err);
+        this.setState({ paymentError: ""+err, });
+        return;
+      }
+
+      localStorage.setItem(`cert-ninja|invoice-tx|${this.state.invoice.invoiceId}`, tx);
+      this.setState({ paymentTx: ""+tx, });
+    });
   }
 }
 

@@ -1,5 +1,22 @@
 "use strict";
 
+const BigNumber = require('bignumber.js');
+
+function normalizeComponent(inp, bits) {
+    if (inp instanceof Buffer) inp = inp.toString('hex');
+    else if (typeof(inp) === 'number') inp = (new BigNumber(inp)).floor().toString(16);
+    else if (typeof(inp) === 'string') {}
+    else if (typeof(inp) === 'object' && inp.isBigNumber) inp = inp.floor().toString(16);
+    else throw("unexpected type: " + typeof(inp));
+
+    if (inp.substring(0, 2) === '0x') inp = inp.substring(2);
+    inp = "0".repeat(Math.max(0, (bits/4) - inp.length)) + inp;
+
+    if (inp.length > (bits/4)) throw("input too long");
+
+    return inp;
+}
+
 function normalizeAddr(addr) {
   addr = addr.toLowerCase();
   if (addr.substr(0, 2) !== '0x') addr = '0x'+addr;
@@ -75,6 +92,7 @@ function watchTX(web3, txHash, cb) {
 }
 
 module.exports = {
+  normalizeComponent,
   normalizeAddr,
   loadCertNinjaContract,
   sendTX,
