@@ -17,8 +17,42 @@ function sendMailgun(config, from, to, subject, text, cb) {
   }, cb);
 }
 
+function _responseHandler(res, body) {
+  console.log('3', res.statusCode);
+  if (res.statusCode == 200) {
+    console.log('4', body)
+  } else {
+    console.log('oops')
+  }
+  // console.log(body.url);
+  // console.log(body.explanation);
+}
+
+function fetchWellKnownFile(domain) {
+  let url = `https://${domain}/.well-known/cert-ninja.txt`;
+  request.get(`https://${domain}/.well-known/cert-ninja.txt`, (err, res, body) => {
+    // console.log('1', err, res)
+    if (err) {
+      console.log('1', err);
+      if (err.code && err.code === 'ECONNREFUSED') {
+        request.get(`http://${domain}/.well-known/cert-ninja.txt`, (err, res, body) => {
+          // console.log('2', err, res)
+          if (err) {
+            console.log('2', err);
+          } else {
+            _responseHandler(res, body);
+          }
+        });
+      }
+    } else {
+      _responseHandler(res, body);
+    }
+  });
+}
+
 
 
 module.exports = {
   sendMailgun,
+  fetchWellKnownFile,
 };
