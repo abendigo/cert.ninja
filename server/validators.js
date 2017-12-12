@@ -17,35 +17,39 @@ function sendMailgun(config, from, to, subject, text, cb) {
   }, cb);
 }
 
-function _responseHandler(res, body) {
-  console.log('3', res.statusCode);
-  if (res.statusCode == 200) {
-    console.log('4', body)
-  } else {
-    console.log('oops')
-  }
-  // console.log(body.url);
-  // console.log(body.explanation);
-}
 
-function fetchWellKnownFile(domain) {
-  let url = `https://${domain}/.well-known/cert-ninja.txt`;
-  request.get(`https://${domain}/.well-known/cert-ninja.txt`, (err, res, body) => {
-    // console.log('1', err, res)
-    if (err) {
-      console.log('1', err);
-      if (err.code && err.code === 'ECONNREFUSED') {
-        request.get(`http://${domain}/.well-known/cert-ninja.txt`, (err, res, body) => {
-          // console.log('2', err, res)
-          if (err) {
-            console.log('2', err);
-          } else {
-            _responseHandler(res, body);
-          }
-        });
-      }
+function fetchWellKnownFile(domain, callback) {
+  function _responseHandler(res, body, callback) {
+    console.log('3', res.statusCode);
+    if (res.statusCode == 200) {
+      console.log('4', body)
     } else {
-      _responseHandler(res, body);
+      console.log('oops')
+      callback({
+
+      })
+    }
+    // console.log(body.url);
+    // console.log(body.explanation);
+  }
+
+  request.get(`https://${domain}/.well-known/cert-ninja.txt`, (httpsErr, res, body) => {
+    if (httpsErr) {
+      request.get(`http://${domain}/.well-known/cert-ninja.txt`, (httpErr, res, body) => {
+        if (httpErr) {
+          console.log('2', err);
+          callback({
+            message: 'Error fetching domain file. I tried both HTTP and HTTPS',
+            url: `https://${domain}/.well-known/cert-ninja.txt`,
+            httpsErr,
+            httpErr
+          });
+        } else {
+          _responseHandler(res, body, callback);
+        }
+      });
+    } else {
+      _responseHandler(res, body, callback);
     }
   });
 }
