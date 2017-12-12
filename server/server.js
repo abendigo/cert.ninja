@@ -8,6 +8,8 @@ const ethUtil = require('ethereumjs-util');
 const yaml = require('js-yaml');
 const lmdb = require('node-lmdb');
 const Web3 = require('web3');
+const sortKeys = require('sort-keys');
+const BigNumber = require('bignumber.js');
 
 // koa includes
 const Koa = require('koa');
@@ -86,6 +88,27 @@ api.get('/get-rates', async (ctx) => {
     pricing: config.pricing,
     ethUsd,
   };
+});
+
+api.post('/lookup-certhash', async (ctx) => {
+  let cert, latestCertHash;
+
+  {
+    const txn = env.beginTxn({ readOnly: true, });
+    let certJson = txn.getString(dbCert, ctx.request.body.certHash);
+    if (certJson) {
+      cert = JSON.parse(certJson);
+      latestCertHash = txn.getString(dbCertHash, cnUtils.normalizeAddr(cert.validated.ethAddr));
+    }
+    txn.commit();
+  }
+
+  if (cert) {
+    ctx.response.status = 200;
+    ctx.response.body = { cert, latestCertHash, };
+  } else {
+    ctx.response.status = 404;
+  }
 });
 
 api.post('/create-invoice', async (ctx) => {
@@ -211,6 +234,128 @@ api.post('/invoice-status', async (ctx) => {
   }
 });
 
+
+
+api.post('/validate-domain', async (ctx) => {
+  let invoiceJson;
+
+  {
+    const txn = env.beginTxn({ readOnly: true, });
+    invoiceJson = txn.getString(dbInvoice, ctx.request.body.invoiceSecret);
+    txn.commit();
+  }
+
+  if (!invoiceJson) {
+    ctx.response.status = 404;
+    return;
+  }
+
+  let invoice = JSON.parse(invoiceJson);
+
+  if (!invoice.paid) {
+    ctx.response.status = 400;
+    ctx.response.body = { status: "ERROR", error: "Invoice must be paid first.", };
+    return;
+  }
+
+  if (!invoice.request.domain) {
+    ctx.response.status = 400;
+    ctx.response.body = { status: "ERROR", error: "Domain was not a part of the request.", };
+    return;
+  }
+
+  if (invoice.validated.domain) {
+    ctx.response.status = 400;
+    ctx.response.body = { status: "ERROR", error: "Domain already validated.", };
+    return;
+  }
+
+  return new Promise((resolve, reject) => {
+    validators.validateDomain(invoice.request.domain, invoice.domainKey, (err) => {
+      if (err) {
+        ctx.response.status = 400;
+        ctx.response.body = { status: "ERROR", error: err.message, };
+      } else {
+        ctx.response.status = 200;
+        ctx.response.body = { status: "OK", };
+
+        invoice.validated.domain = getUnixTime();
+
+        {
+          const txn = env.beginTxn();
+          txn.putString(dbInvoice, invoice.invoiceSecret, JSON.stringify(invoice));
+          txn.commit();
+        }
+      }
+
+      resolve();
+    });
+  });
+});
+
+
+
+
+api.post('/issue-certificate', async (ctx) => {
+  let invoiceJson;
+
+  {
+    const txn = env.beginTxn({ readOnly: true, });
+    invoiceJson = txn.getString(dbInvoice, ctx.request.body.invoiceSecret);
+    txn.commit();
+  }
+
+  if (!invoiceJson) {
+    ctx.response.status = 404;
+    return;
+  }
+
+  let invoice = JSON.parse(invoiceJson);
+
+  if (invoice.certHash) {
+    ctx.response.status = 400;
+    ctx.response.body = { status: "ERROR", error: `Request already fullfilled. certHash: ${invoice.certHash}`, };
+    return;
+  }
+
+  if (!invoice.paid) {
+    ctx.response.status = 400;
+    ctx.response.body = { status: "ERROR", error: "Invoice must be paid first.", };
+    return;
+  }
+
+  for (let m of Object.keys(invoice.request)) {
+    if (!invoice.validated[m]) {
+      ctx.response.status = 400;
+      ctx.response.body = { status: "ERROR", error: `validation not complete: missing ${m}`, };
+      return;
+    }
+  }
+
+  let cert = {
+    validated: invoice.request,
+    timestamps: invoice.validated,
+    nonce: getRandToken(),
+  };
+
+  cert = sortKeys(cert, {deep: true});
+  let certJson = JSON.stringify(cert);
+  let certHash = ethUtil.sha3(new Buffer(certJson)).toString('hex');
+
+  invoice.certHash = certHash;
+  invoice.issuedTimestamp = getUnixTime();
+
+  {
+    const txn = env.beginTxn();
+    txn.putString(dbInvoice, invoice.invoiceSecret, JSON.stringify(invoice));
+    txn.putString(dbCert, certHash, certJson);
+    txn.putString(dbCertHash, cnUtils.normalizeAddr(invoice.request.ethAddr), certHash);
+    txn.commit();
+  }
+
+  ctx.response.status = 200;
+  ctx.response.body = { status: "OK", cert, certHash, };
+});
 
 // server logic
 

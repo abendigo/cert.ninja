@@ -24,6 +24,13 @@ function normalizeAddr(addr) {
   return addr;
 }
 
+function normalizeHash(hash) {
+  hash = hash.toLowerCase();
+  if (hash.substr(0, 2) === '0x') hash = hash.substr(2);
+  if (hash.length !== 64) throw(`bad hash length: ${hash}`);
+  return hash;
+}
+
 function loadCertNinjaContract(web3) {
   let spec = require('../build/CertNinja.json');
   let certNinjaAbi = JSON.parse(spec.contracts['CertNinja.sol:CertNinja'].abi);
@@ -94,6 +101,7 @@ function watchTX(web3, txHash, cb) {
 module.exports = {
   normalizeComponent,
   normalizeAddr,
+  normalizeHash,
   loadCertNinjaContract,
   sendTX,
 };

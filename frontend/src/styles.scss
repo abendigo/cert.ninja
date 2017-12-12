@@ -58,6 +58,10 @@
   .checkmark-small {
     color: green;
   }
+
+  .exclm-small {
+    color: red;
+  }
 }
 
 .validation-screen {
@@ -68,5 +72,13 @@
     margin-bottom: 30px;
     padding-bottom: 30px;
     border-bottom: 1px dotted #ccc;
+  }
+}
+
+.cert-has-been-issued {
+  font-size: 120%;
+
+  > div {
+    margin-top: 30px;
   }
 }

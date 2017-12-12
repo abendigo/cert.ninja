@@ -38,6 +38,7 @@ export default class ScreenCertificate extends ScreenBase {
       return response.json();
     }).then((json) => {
       this.setState({ invoice: json, }, () => this.invoiceReady());
+console.log("YEY",json);
     });
   }
 
@@ -69,6 +70,28 @@ export default class ScreenCertificate extends ScreenBase {
 
   myRender() {
     if (!this.state.invoice || this.state.web3Available === undefined) return <div>Loading...</div>;
+
+
+    if (this.state.invoice.certHash) {
+      return (
+        <div className="cert-has-been-issued">
+          <h1>Your certificate has been issued!</h1>
+
+          <div>
+            Thank you for purchasing a certificate. We have emailed the following links to {this.state.invoice.request.email}:
+          </div>
+
+          <div>
+            <a href={`/certificate/${this.state.invoice.certHash}`}>Direct link to this certificate</a>
+          </div>
+
+          <div>
+            <a href={`/address/${this.state.invoice.request.ethAddr}`}>Link for your Ethereum Address</a>
+          </div>
+        </div>
+      );
+    }
+
 
     let paymentInfo;
 
@@ -146,12 +169,15 @@ export default class ScreenCertificate extends ScreenBase {
           </div>
 
           <div>
-            <Ant.Button>Validate URL</Ant.Button>
+            <Ant.Button type="primary" onClick={this.validateDomain.bind(this)}>Validate URL</Ant.Button>
           </div>
+
+          {this.state.domainError && <div style={{ color: 'red', }}>{this.state.domainError}</div>}
         </div>
       );
 
       if (!this.state.invoice.paid) domainInfo = 'Pay invoice first';
+      if (this.state.invoice.validated.domain) domainInfo = null;
 
       addRow(
         'Domain Name',
@@ -160,11 +186,25 @@ export default class ScreenCertificate extends ScreenBase {
       );
     }
 
+
+
+    let readyToCreateCert = true;
+    if (!this.state.invoice.validated.email || !this.state.invoice.paid) readyToCreateCert = false;
+    for (let m of Object.keys(this.state.invoice.request)) {
+      if (!this.state.invoice.validated[m]) readyToCreateCert = false;
+    }
+
+
     return (
       <div className="validation-screen">
         <h1>Request {this.state.invoice.invoiceId.substr(0,10)}... Status</h1>
 
         {rows}
+
+        <div>
+          <Ant.Button type="primary" disabled={!readyToCreateCert} onClick={this.createCert.bind(this)}>Create My Certificate</Ant.Button>
+          { this.state.issueCertError && <div style={{ color: 'red', }}>{this.state.issueCertError}</div> }
+        </div>
       </div>
     );
   }
@@ -193,6 +233,46 @@ export default class ScreenCertificate extends ScreenBase {
 
       localStorage.setItem(`cert-ninja|invoice-tx|${this.state.invoice.invoiceId}`, tx);
       this.setState({ paymentTx: ""+tx, });
+    });
+  }
+
+
+  validateDomain() {
+    fetch('http://localhost:3001/api/validate-domain', {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({ invoiceSecret: this.props.match.params.invoiceSecret, }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      return response.json();
+    }).then((json) => {
+      if (json.status === 'OK') {
+        this.fetchInvoice();
+      } else {
+        this.setState({ domainError: json.error, });
+      }
+    });
+  }
+
+
+  createCert() {
+    fetch('http://localhost:3001/api/issue-certificate', {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({ invoiceSecret: this.props.match.params.invoiceSecret, }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      return response.json();
+    }).then((json) => {
+      if (json.status === 'OK') {
+        this.fetchInvoice();
+      } else {
+        this.setState({ issueCertError: json.error, });
+      }
     });
   }
 }

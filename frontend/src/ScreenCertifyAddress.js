@@ -69,6 +69,7 @@ export default class ScreenCertifyAddress extends ScreenBase {
         placeholder: 'phone number (cell-phone only)',
         type: 'input',
         time: '10 minutes',
+        comingSoon: true,
       },
       {
         name: 'phone',

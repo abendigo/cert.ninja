@@ -22,7 +22,7 @@ function validateDomain(domain, secret, callback) {
     if (err) {
       callback(err);
     } else {
-      if (secret && res.secret && secret === res.secret) {
+      if (secret && res.secret && secret.trim() === res.secret.trim()) {
         callback();
       } else {
         callback({
@@ -45,21 +45,18 @@ function fetchWellKnownFile(domain, callback) {
     } else {
       console.log('oops')
       callback({
-        message: 'Error fetching domain file.',
+        message: `Error fetching domain file (HTTP code ${res.statusCode})`,
         url: `https://${domain}/.well-known/cert-ninja.txt`,
         statusCode: res.statusCode,
         body
       })
     }
-    // console.log(body.url);
-    // console.log(body.explanation);
   }
 
   request.get(`https://${domain}/.well-known/cert-ninja.txt`, (httpsErr, res, body) => {
     if (httpsErr) {
       request.get(`http://${domain}/.well-known/cert-ninja.txt`, (httpErr, res, body) => {
         if (httpErr) {
-          console.log('2', err);
           callback({
             message: 'Error fetching domain file. I tried both HTTP and HTTPS',
             url: `https://${domain}/.well-known/cert-ninja.txt`,
