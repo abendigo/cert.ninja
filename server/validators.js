@@ -22,7 +22,7 @@ function validateDomain(domain, secret, callback) {
     if (err) {
       callback(err);
     } else {
-      if (secret && res.secret && secret === res) {
+      if (secret && res.secret && secret === res.secret) {
         callback();
       } else {
         callback({
@@ -38,16 +38,17 @@ function validateDomain(domain, secret, callback) {
 
 function fetchWellKnownFile(domain, callback) {
   function _responseHandler(res, body, callback) {
-    console.log('3', res.statusCode);
     if (res.statusCode == 200) {
-      console.log('4', body)
       callback(undefined, {
         secret: body
       })
     } else {
       console.log('oops')
       callback({
-
+        message: 'Error fetching domain file.',
+        url: `https://${domain}/.well-known/cert-ninja.txt`,
+        statusCode: res.statusCode,
+        body
       })
     }
     // console.log(body.url);
