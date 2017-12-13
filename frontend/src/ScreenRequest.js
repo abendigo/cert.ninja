@@ -83,7 +83,7 @@ export default class ScreenCertificate extends ScreenBase {
           <h1>Your certificate has been issued!</h1>
 
           <div>
-            Thank you for purchasing a certificate. We have emailed the following links to {this.state.invoice.request.email}:
+            Thank you for purchasing a certificate:
           </div>
 
           <div>
