@@ -104,7 +104,7 @@ export default class ScreenCertificate extends ScreenBase {
         paymentInfo = <div>No web3 found, please install MetaMask</div>;
       } else if (this.state.networkId === undefined || this.state.accounts === undefined) {
         paymentInfo = <div>Loading web3 status...</div>;
-      } else if (parseInt(this.state.networkId) !== 17) { // FIXME: ropsten is 3
+      } else if (parseInt(this.state.networkId) !== 3 && parseInt(this.state.networkId) !== 17) { // 17 is dev network
         paymentInfo = <div>Incorrect ethereum network {this.state.networkId}. Please change to ropsten and then reload.</div>;
       } else if (this.state.accounts.length === 0) {
         paymentInfo = <div>Please unlock metamask.</div>;
