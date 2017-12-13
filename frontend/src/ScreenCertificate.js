@@ -40,7 +40,7 @@ export default class ScreenCertificate extends ScreenBase {
 
     let rows = [];
 
-    if (cert.validated.domain) rows.push({
+    if (cert.validated.ethAddr) rows.push({
       short: 'ethAddr',
       namePretty: 'Ethereum Address',
       value: <a href={`https://etherscan.io/address/${cert.validated.ethAddr}`}>{cert.validated.ethAddr}</a>,
