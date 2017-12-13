@@ -9,7 +9,7 @@ if ($cmd eq 'build') {
   sys(q{rm -rf dist/});
   sys(q{npm run build});
   sys(q{rm dist/*.map});
-  sys(q{cp dist/verified*.png dist/verified.png});
+  sys(q{cp src/verified.png dist/verified.png});
   sys(q{cp extra/* dist/});
 } elsif ($cmd eq 'deploy') {
   my $host = shift // 'cert.ninja';

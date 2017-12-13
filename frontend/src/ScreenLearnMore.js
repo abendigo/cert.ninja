@@ -3,7 +3,6 @@ import * as Ant from 'antd';
 import {Link} from 'react-router-dom';
 
 import ScreenBase from './ScreenBase';
-import img from './verified.png';
 
 
 export default class ScreenLearnMore extends ScreenBase {
@@ -21,11 +20,11 @@ export default class ScreenLearnMore extends ScreenBase {
         </div>
 
         <div>
-          After certifying an address, you will receive a link to your certificate, as well as a snippet of HTML code that allows you to embed a Cert Ninja verification badge that links to your certificate. For example, here is the badge for a Cert Ninja address:
+          After certifying an address, you will receive a link to your certificate, as well as a snippet of HTML code that allows you to embed a Cert Ninja verification badge that links to your certificate. Here is an example badge:
         <div>
 
         </div>
-          <img src={img} />
+          <a title="Verified by Cert Ninja" href="https://cert.ninja/address/0x6F794648E66e4bB155977e07447eA60f864cF816"><img src="https://cert.ninja/verified.png" /></a>
         </div>
 
         <h2>I'm convinced. How can I certify my address?</h2>
