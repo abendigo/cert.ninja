@@ -109,9 +109,9 @@
      inkscape:window-x="0"
      showgrid="false"
      borderopacity="1.0"
-     inkscape:current-layer="layer1"
-     inkscape:cx="113.0625"
-     inkscape:cy="68.563782"
+     inkscape:current-layer="text854"
+     inkscape:cx="66.8125"
+     inkscape:cy="67.563782"
      inkscape:window-width="1920"
      inkscape:pageopacity="0.0"
      inkscape:document-units="px">
@@ -169,22 +169,48 @@
          id="tspan838"
          x="54.25"
          y="1006.2506" /></text>
-    <text
-       xml:space="preserve"
+    <g
+       aria-label="Cert
+Ninja"
        style="font-style:normal;font-weight:normal;font-size:19.50028801px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.48750722"
-       x="64.62513"
-       y="963.89508"
-       id="text854"><tspan
-         sodipodi:role="line"
-         id="tspan852"
-         x="64.62513"
-         y="963.89508"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722">Cert</tspan><tspan
-         sodipodi:role="line"
-         x="64.62513"
-         y="988.67627"
-         id="tspan856"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722">Ninja</tspan></text>
+       id="text854">
+      <path
+         d="m 55.798583,955.30657 q -1.104508,0 -1.104508,1.03786 0,1.07595 1.104508,1.07595 1.085466,0 1.085466,-1.07595 0,-1.03786 -1.085466,-1.03786 z m -0.06665,2.78984 q -0.714122,-0.0571 -1.209246,-0.69508 -0.485603,-0.63795 -0.485603,-1.41872 0,-0.76173 0.485603,-1.31398 0.495124,-0.55226 1.237811,-0.58082 1.694849,0.47608 1.618676,-0.63795 -0.07617,-1.12355 -2.437536,-1.67581 l -1.142595,0.0476 q -3.570609,2.37088 -3.637261,5.05598 -0.06665,2.6851 3.085007,5.34163 0.723643,0.20948 1.456808,0.12379 0.742687,-0.0857 1.504417,-0.0857 0.809338,0.0476 1.399679,-0.89503 0.599862,-0.95216 0.561776,-1.42825 0.266605,0.219 0.571297,0.39991 0.304692,0.18091 0.58082,0.33326 -0.514168,0.98073 -1.22829,1.79959 -0.7046,0.80933 -1.885282,1.11403 l -3.922909,-0.12378 q -3.037399,-3.30401 -3.465872,-6.32236 -0.428473,-3.01836 3.465872,-5.37972 l -4.018126,-0.01 -1.742457,-1.18068 13.834921,0.0857 1.294941,1.02834 -4.199037,0.019 q 0.533211,0.46656 0.733165,0.9712 0.199954,0.50465 0.333257,0.91408 0.257084,0.98073 -0.656992,2.82792 -0.914076,1.8472 -2.132844,1.68533 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path836" />
+      <path
+         d="m 62.520851,961.70511 5.97958,-3.46587 -5.351153,-1.57107 -2.723185,2.40897 -0.209475,1.8948 2.723184,2.61845 2.418493,0.20947 2.827923,-2.09475 -1.361593,-0.73317 -1.885281,1.78055 -1.790066,-0.10474 -1.780544,-1.78055 0.209476,-1.37111 1.571068,-1.04738 2.627969,0.10474 -4.199037,2.20902 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path838" />
+      <path
+         d="m 75.117961,960.10547 q 0,0.3047 -0.209476,0.58082 -0.209476,0.26661 -0.552254,0.26661 -0.390387,0 -0.599863,-0.24756 -0.209476,-0.25709 -0.209476,-0.59987 0,-0.3523 0.209476,-0.60938 0.209476,-0.26661 0.599863,-0.26661 0.342778,0 0.552254,0.25709 0.209476,0.24756 0.209476,0.6189 z m -5.1512,-1.36159 0.0095,2.57084 0.0095,2.56132 h 1.4092 l -0.07617,-4.18952 q 2.237582,-1.50441 1.704371,-0.38086 -0.485603,1.17116 -0.0095,1.80911 0.476082,0.62842 1.218768,0.62842 0.666514,0 1.152117,-0.47608 0.495125,-0.47608 0.418952,-1.14259 0,-0.69508 -0.457038,-1.17116 -0.447517,-0.47608 -1.542504,-0.99025 -1.094987,-0.51417 -2.647011,0.7046 l 0.09522,-0.90456 -1.313984,-0.69507 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path840" />
+      <path
+         d="m 76.384336,949.18417 v 14.33005 l 1.285419,1.04737 3.142137,-2.09475 -0.76173,-0.28565 -2.428015,0.76173 0.04761,-9.61684 h 3.713434 l -0.618905,-0.95217 h -2.904096 v -2.09475 l -1.142595,-0.95217 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path842" />
+      <path
+         d="m 56.255621,974.74615 v 13.24458 h -1.93289 l 0.238041,-0.0952 -9.521625,-11.12126 v 11.27361 l -1.828152,-0.0571 v -13.02559 h -1.894803 l -1.304463,-1.3235 h 7.350695 l 1.713892,1.3235 h -3.999082 l 9.131238,10.14053 0.01904,-10.34048 -1.190203,0.0667 -1.437765,-1.25685 6.017667,0.0286 1.447287,1.22829 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path844" />
+      <path
+         d="m 59.340627,988.74293 0.0095,-2.84696 0.0095,-4.26569 1.485373,1.42824 v 4.7989 l 1.904325,-0.79981 -1.704371,1.47585 z m 2.523231,-9.66444 q 0,0.64747 -0.437995,1.21876 -0.437994,0.5713 -1.17116,0.5713 -0.828381,0 -1.266376,-0.52369 -0.437994,-0.53321 -0.437994,-1.26637 0,-0.73317 0.437994,-1.2759 0.437995,-0.55226 1.266376,-0.55226 0.733166,0 1.17116,0.53321 0.437995,0.52369 0.437995,1.29495 z m -0.999771,0 q 0,-0.37135 -0.209475,-0.61891 -0.209476,-0.25708 -0.552255,-0.25708 -0.390386,0 -0.599862,0.2666 -0.209476,0.25709 -0.209476,0.60939 0,0.34277 0.209476,0.59986 0.209476,0.24756 0.599862,0.24756 0.342779,0 0.552255,-0.26661 0.209475,-0.27612 0.209475,-0.58081 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path846" />
+      <path
+         d="m 63.682488,983.62982 1.628198,-0.19043 v 4.47516 l 0.866468,0.47608 0.218997,-4.47516 q 1.961455,-1.42824 3.370655,0 l 0.11426,3.80865 0.866468,0.76173 v -5.52254 q -2.608925,-1.99954 -5.541586,0 l -1.742457,-0.0952 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path848" />
+      <path
+         d="m 75.232219,991.40899 0.0095,-5.22737 0.199954,-4.26569 1.294941,1.42824 v 10.13101 l -4.189515,-1.84719 -1.609155,-1.28542 z m 2.618447,-12.14007 q 0,0.64747 -0.437995,1.21877 -0.437995,0.57129 -1.17116,0.57129 -0.828381,0 -1.266376,-0.52369 -0.437995,-0.53321 -0.437995,-1.26637 0,-0.73317 0.437995,-1.2759 0.437995,-0.55225 1.266376,-0.55225 0.733165,0 1.17116,0.53321 0.437995,0.52369 0.437995,1.29494 z m -0.999771,0 q 0,-0.37135 -0.209476,-0.61891 -0.209475,-0.25708 -0.552254,-0.25708 -0.390386,0 -0.599862,0.2666 -0.209476,0.25709 -0.209476,0.60939 0,0.34278 0.209476,0.59986 0.209476,0.24756 0.599862,0.24756 0.342779,0 0.552254,-0.2666 0.209476,-0.27613 0.209476,-0.58082 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path850" />
+      <path
+         d="m 84.001638,982.14445 -3.51348,1.09499 -0.152346,2.49466 1.17116,2.58036 2.418493,0.31422 2.504187,-2.11381 0.856947,1.64725 2.028106,0.22851 0.161867,-0.85694 -1.485373,-0.22852 -2.34232,-3.83722 -0.856946,0.62843 1.085465,1.68533 -1.790065,1.43776 -1.333028,-0.0762 -1.009292,-1.63772 0.228519,-1.87576 2.189974,-0.78077 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.50028801px;font-family:Ani;-inkscape-font-specification:'Ani, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.48750722"
+         id="path852" />
+    </g>
   </g>
   <metadata
      id="metadata24">
@@ -201,7 +227,7 @@
             <dc:title>Openclipart</dc:title>
           </cc:Agent>
         </dc:publisher>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:date>2010-09-10T20:38:59</dc:date>
         <dc:description>Certification icon.</dc:description>
         <dc:source>https://openclipart.org/detail/84271/certificate-by-jhnri4</dc:source>
