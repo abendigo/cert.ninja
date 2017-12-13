@@ -90,46 +90,34 @@ api.get('/get-rates', async (ctx) => {
   };
 });
 
-api.post('/lookup-certhash', async (ctx) => {
-  let cert, latestCertHash;
-
-  {
-    const txn = env.beginTxn({ readOnly: true, });
-    let certJson = txn.getString(dbCert, ctx.request.body.certHash);
-    if (certJson) {
-      cert = JSON.parse(certJson);
-      latestCertHash = txn.getString(dbCertHash, cnUtils.normalizeAddr(cert.validated.ethAddr));
-    }
-    txn.commit();
-  }
-
-  if (cert) {
-    ctx.response.status = 200;
-    ctx.response.body = { cert, latestCertHash, };
-  } else {
-    ctx.response.status = 404;
-  }
-});
-
 api.post('/lookup-cert', async (ctx) => {
-  let cert, certHash, latestCertHash;
+  let cert, certHash, latestCertHash, found;
 
   {
     const txn = env.beginTxn({ readOnly: true, });
 
-    if (ctx.request.body.certHash) {
-      let certJson = txn.getString(dbCert, ctx.request.body.certHash);
+    let search = ctx.request.body.search;
+
+    try {
+      let maybeCertHash = cnUtils.normalizeHash(search);
+      let certJson = txn.getString(dbCert, maybeCertHash);
       if (certJson) {
         cert = JSON.parse(certJson);
-        certHash = ctx.request.body.certHash;
+        certHash = maybeCertHash;
         latestCertHash = txn.getString(dbCertHash, cnUtils.normalizeAddr(cert.validated.ethAddr));
+        found = 'hash';
       }
-    } else if (ctx.request.body.address) {
-      certHash = latestCertHash = txn.getString(dbCertHash, cnUtils.normalizeAddr(ctx.request.body.address));
-      if (latestCertHash) {
-        let certJson = txn.getString(dbCert, latestCertHash);
-        cert = JSON.parse(certJson);
-      }
+    } catch(e) {}
+
+    if (!cert) {
+      try {
+        certHash = latestCertHash = txn.getString(dbCertHash, cnUtils.normalizeAddr(search));
+        if (latestCertHash) {
+          let certJson = txn.getString(dbCert, latestCertHash);
+          cert = JSON.parse(certJson);
+          found = 'addr';
+        }
+      } catch(e) {}
     }
 
     txn.commit();
@@ -137,7 +125,7 @@ api.post('/lookup-cert', async (ctx) => {
 
   if (cert) {
     ctx.response.status = 200;
-    ctx.response.body = { cert, certHash, latestCertHash, };
+    ctx.response.body = { cert, certHash, latestCertHash, found, };
   } else {
     ctx.response.status = 404;
   }
@@ -373,7 +361,7 @@ api.post('/issue-certificate', async (ctx) => {
 
   cert = sortKeys(cert, {deep: true});
   let certJson = JSON.stringify(cert);
-  let certHash = ethUtil.sha3(new Buffer(certJson)).toString('hex');
+  let certHash = cnUtils.normalizeHash(ethUtil.sha3(new Buffer(certJson)).toString('hex'));
 
   invoice.certHash = certHash;
 

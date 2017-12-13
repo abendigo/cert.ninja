@@ -19,7 +19,7 @@ export default class ScreenCertificate extends ScreenBase {
     fetch('http://localhost:3001/api/lookup-cert', {
       method: 'POST',
       mode: 'cors',
-      body: JSON.stringify({ certHash: this.props.match.params.certHash, address: this.props.match.params.address, }),
+      body: JSON.stringify({ search: this.props.match.params.certHash || this.props.match.params.address, }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -82,8 +82,8 @@ console.log("YEY",json);
     }
 
     let hashStatus;
-    let validatedCertHash = ethUtil.sha3(new Buffer(JSON.stringify(sortKeys(cert, {deep: true})))).toString('hex');
-    if (cnUtils.normalizeHash(this.state.certStatus.certHash) === cnUtils.normalizeHash(validatedCertHash)) {
+    let validatedCertHash = cnUtils.normalizeHash(ethUtil.sha3(new Buffer(JSON.stringify(sortKeys(cert, {deep: true})))).toString('hex'));
+    if (cnUtils.normalizeHash(this.state.certStatus.certHash) === validatedCertHash) {
       hashStatus = <span><Ant.Icon type="check-circle" className="checkmark-small"/> Certificate hash matches certificate data.</span>;
     } else {
       hashStatus = <span><Ant.Icon type="exclamation-circle" className="exclm-small"/> Certificate hash does not match certificate data.</span>;
@@ -126,7 +126,7 @@ console.log("YEY",json);
             </div>
 
             <div className="cert-info-tags">
-              <Ant.Popover placement="top" content={<pre>679517167b450673692471cf4d57ad9a3c41a16cbe7d4f05cb4eeeda55a7b434</pre>} title="Certificate Hash">
+              <Ant.Popover placement="top" content={<pre>{validatedCertHash}</pre>} title="Certificate Hash">
                 <Ant.Tag color="blue">Certificate Hash</Ant.Tag>
               </Ant.Popover>
 
