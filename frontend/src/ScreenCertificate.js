@@ -43,7 +43,7 @@ export default class ScreenCertificate extends ScreenBase {
     if (cert.validated.ethAddr) rows.push({
       short: 'ethAddr',
       namePretty: 'Ethereum Address',
-      value: <a href={`https://etherscan.io/address/${cert.validated.ethAddr}`}>{cert.validated.ethAddr}</a>,
+      value: <a href={`https://ropsten.etherscan.io/address/${cert.validated.ethAddr}`}>{cert.validated.ethAddr}</a>,
     });
 
     if (cert.validated.domain) rows.push({
