@@ -6,6 +6,7 @@ import escape from 'escape-html';
 
 import ScreenBase from './ScreenBase';
 const cnUtils = require('../../contract/scripts/cnUtils.js');
+import * as FrontendUtils from './FrontendUtils';
 
 
 export default class ScreenCertificate extends ScreenBase {
@@ -31,7 +32,7 @@ export default class ScreenCertificate extends ScreenBase {
   }
 
   fetchInvoice() {
-    fetch('http://localhost:3001/api/invoice-status', {
+    fetch(`${FrontendUtils.getApiBaseUrl()}/api/invoice-status`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify({ invoiceSecret: this.props.match.params.invoiceSecret, }),
@@ -242,7 +243,7 @@ export default class ScreenCertificate extends ScreenBase {
 
 
   validateDomain() {
-    fetch('http://localhost:3001/api/validate-domain', {
+    fetch(`${FrontendUtils.getApiBaseUrl()}/api/validate-domain`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify({ invoiceSecret: this.props.match.params.invoiceSecret, }),
@@ -262,7 +263,7 @@ export default class ScreenCertificate extends ScreenBase {
 
 
   createCert() {
-    fetch('http://localhost:3001/api/issue-certificate', {
+    fetch(`${FrontendUtils.getApiBaseUrl()}/api/issue-certificate`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify({ invoiceSecret: this.props.match.params.invoiceSecret, }),

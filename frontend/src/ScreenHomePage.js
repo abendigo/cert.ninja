@@ -4,6 +4,7 @@ import SVGInline from "react-svg-inline";
 import {Redirect, Link} from 'react-router-dom';
 
 import ScreenBase from './ScreenBase';
+import * as FrontendUtils from './FrontendUtils';
 
 
 export default class ScreenHomePage extends ScreenBase {
@@ -43,7 +44,7 @@ export default class ScreenHomePage extends ScreenBase {
     if (searchVal === undefined || searchVal === '') return;
     searchVal = searchVal.trim();
 
-    fetch('http://localhost:3001/api/lookup-cert', {
+    fetch(`${FrontendUtils.getApiBaseUrl()}/api/lookup-cert`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify({ search: searchVal, }),

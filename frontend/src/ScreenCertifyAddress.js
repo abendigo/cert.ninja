@@ -2,8 +2,7 @@ import React from 'react';
 import * as Ant from 'antd';
 
 import ScreenBase from './ScreenBase';
-
-
+import * as FrontendUtils from './FrontendUtils';
 
  
 
@@ -14,7 +13,7 @@ export default class ScreenCertifyAddress extends ScreenBase {
     this.state = {
     };
 
-    fetch('http://localhost:3001/api/get-rates', {
+    fetch(`${FrontendUtils.getApiBaseUrl()}/api/get-rates`, {
       method: 'GET',
       mode: 'cors',
       cache: 'default',
@@ -196,7 +195,7 @@ export default class ScreenCertifyAddress extends ScreenBase {
 
     this.setState({ submitting: true, });
 
-    fetch('http://localhost:3001/api/create-invoice', {
+    fetch(`${FrontendUtils.getApiBaseUrl()}/api/create-invoice`, {
       method: 'POST',
       body: JSON.stringify(request),
       headers: {

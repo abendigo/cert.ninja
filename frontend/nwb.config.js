@@ -3,8 +3,6 @@ module.exports = (c) => {
     type: 'react-app',
 
     webpack: {
-      publicPath: '/static/',
-
       rules: {
         svg: {
           use: [
@@ -18,8 +16,6 @@ module.exports = (c) => {
       },
     }
   };
-
-  if (c.command === 'serve-react-app') delete ret.webpack.publicPath;
 
   return ret;
 };

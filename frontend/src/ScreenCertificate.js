@@ -7,6 +7,7 @@ const ethUtil = require('ethereumjs-util');
 
 const cnUtils = require('../../contract/scripts/cnUtils.js');
 import ScreenBase from './ScreenBase';
+import * as FrontendUtils from './FrontendUtils';
 
 
 export default class ScreenCertificate extends ScreenBase {
@@ -16,7 +17,7 @@ export default class ScreenCertificate extends ScreenBase {
     this.state = {
     };
 
-    fetch('http://localhost:3001/api/lookup-cert', {
+    fetch(`${FrontendUtils.getApiBaseUrl()}/api/lookup-cert`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify({ search: this.props.match.params.certHash || this.props.match.params.address, }),
