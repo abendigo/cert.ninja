@@ -16,10 +16,10 @@ export default class ScreenCertificate extends ScreenBase {
     this.state = {
     };
 
-    fetch('http://localhost:3001/api/lookup-certhash', {
+    fetch('http://localhost:3001/api/lookup-cert', {
       method: 'POST',
       mode: 'cors',
-      body: JSON.stringify({ certHash: this.props.match.params.certHash, }),
+      body: JSON.stringify({ certHash: this.props.match.params.certHash, address: this.props.match.params.address, }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -75,7 +75,7 @@ console.log("YEY",json);
     let issueDate = moment(parseInt(cert.issuedTimestamp) * 1000);
 
     let revokeStatus;
-    if (cnUtils.normalizeHash(this.props.match.params.certHash) === cnUtils.normalizeHash(this.state.certStatus.latestCertHash)) {
+    if (cnUtils.normalizeHash(this.state.certStatus.certHash) === cnUtils.normalizeHash(this.state.certStatus.latestCertHash)) {
       revokeStatus = <span><Ant.Icon type="check-circle" className="checkmark-small"/> Certificate has not been revoked.</span>;
     } else {
       revokeStatus = <span><Ant.Icon type="exclamation-circle" className="exclm-small"/> Certificate has been replaced by a <a href={`/certificate/${cnUtils.normalizeHash(this.state.certStatus.latestCertHash)}`}>newer certificate</a>.</span>;
@@ -83,7 +83,7 @@ console.log("YEY",json);
 
     let hashStatus;
     let validatedCertHash = ethUtil.sha3(new Buffer(JSON.stringify(sortKeys(cert, {deep: true})))).toString('hex');
-    if (cnUtils.normalizeHash(this.props.match.params.certHash) === cnUtils.normalizeHash(validatedCertHash)) {
+    if (cnUtils.normalizeHash(this.state.certStatus.certHash) === cnUtils.normalizeHash(validatedCertHash)) {
       hashStatus = <span><Ant.Icon type="check-circle" className="checkmark-small"/> Certificate hash matches certificate data.</span>;
     } else {
       hashStatus = <span><Ant.Icon type="exclamation-circle" className="exclm-small"/> Certificate hash does not match certificate data.</span>;

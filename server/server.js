@@ -111,6 +111,38 @@ api.post('/lookup-certhash', async (ctx) => {
   }
 });
 
+api.post('/lookup-cert', async (ctx) => {
+  let cert, certHash, latestCertHash;
+
+  {
+    const txn = env.beginTxn({ readOnly: true, });
+
+    if (ctx.request.body.certHash) {
+      let certJson = txn.getString(dbCert, ctx.request.body.certHash);
+      if (certJson) {
+        cert = JSON.parse(certJson);
+        certHash = ctx.request.body.certHash;
+        latestCertHash = txn.getString(dbCertHash, cnUtils.normalizeAddr(cert.validated.ethAddr));
+      }
+    } else if (ctx.request.body.address) {
+      certHash = latestCertHash = txn.getString(dbCertHash, cnUtils.normalizeAddr(ctx.request.body.address));
+      if (latestCertHash) {
+        let certJson = txn.getString(dbCert, latestCertHash);
+        cert = JSON.parse(certJson);
+      }
+    }
+
+    txn.commit();
+  }
+
+  if (cert) {
+    ctx.response.status = 200;
+    ctx.response.body = { cert, certHash, latestCertHash, };
+  } else {
+    ctx.response.status = 404;
+  }
+});
+
 api.post('/create-invoice', async (ctx) => {
   let invoice = {
     invoiceId: getRandToken(),
@@ -336,6 +368,7 @@ api.post('/issue-certificate', async (ctx) => {
     validated: invoice.request,
     timestamps: invoice.validated,
     nonce: getRandToken(),
+    issuedTimestamp: getUnixTime(),
   };
 
   cert = sortKeys(cert, {deep: true});
@@ -343,7 +376,6 @@ api.post('/issue-certificate', async (ctx) => {
   let certHash = ethUtil.sha3(new Buffer(certJson)).toString('hex');
 
   invoice.certHash = certHash;
-  invoice.issuedTimestamp = getUnixTime();
 
   {
     const txn = env.beginTxn();

@@ -82,11 +82,11 @@ console.log("YEY",json);
           </div>
 
           <div>
-            <a href={`/certificate/${this.state.invoice.certHash}`}>Direct link to this certificate</a>
+            <a href={`/address/${this.state.invoice.request.ethAddr}`}>Link for your Ethereum Address</a>
           </div>
 
           <div>
-            <a href={`/address/${this.state.invoice.request.ethAddr}`}>Link for your Ethereum Address</a>
+            <a href={`/certificate/${this.state.invoice.certHash}`}>Direct link to this certificate</a>
           </div>
         </div>
       );
@@ -132,7 +132,7 @@ console.log("YEY",json);
     addRow(
       'Email Validated',
       this.state.invoice.validated.email ? <Ant.Tag color="green">Validated</Ant.Tag> : <Ant.Tag color="red">Not validated</Ant.Tag>,
-      '',
+      <span>You clicked the link in our email, proving you have access to the address <b>{this.state.invoice.request.email}</b></span>
     );
 
     addRow(
@@ -148,7 +148,7 @@ console.log("YEY",json);
     addRow(
       'Ethereum Address',
       this.state.invoice.validated.ethAddr ? <Ant.Tag color="green">Validated</Ant.Tag> : <Ant.Tag color="red">Not validated</Ant.Tag>,
-      !this.state.invoice.validated.ethAddr && "Pay the invoice to validate your address.",
+      this.state.invoice.validated.ethAddr ? <span>You paid our invoice from the address <b>{this.state.invoice.request.ethAddr}</b> which proves you control it</span> : <span>Please pay our invoice from the address <b>{this.state.invoice.request.ethAddr}</b></span>,
     );
 
     if (this.state.invoice.request.domain) {
