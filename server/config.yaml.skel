@@ -12,6 +12,8 @@ adminKey:
 
 paymentExpiryDays: 7
 
+web3Endpoint: 'http://localhost:8545'
+
 contractAddr: change-me
 
 mailgun:
