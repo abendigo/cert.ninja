@@ -11,6 +11,7 @@ import ScreenHomePage from './ScreenHomePage';
 import ScreenCertifyAddress from './ScreenCertifyAddress';
 import ScreenCertificate from './ScreenCertificate';
 import ScreenRequest from './ScreenRequest';
+import ScreenLearnMore from './ScreenLearnMore';
 
 
 export default class SCLayout extends React.Component {
@@ -36,7 +37,7 @@ export default class SCLayout extends React.Component {
               style={{ lineHeight: '64px' }}
               onClick={this.menuClicked.bind(this)}
             >
-              <Menu.Item key="/learn">Learn More</Menu.Item>
+              <Menu.Item key="/learn-more">Learn More</Menu.Item>
               <Menu.Item key="/certify-address">Certify an Address</Menu.Item>
             </Menu>
           </Header>
@@ -46,6 +47,7 @@ export default class SCLayout extends React.Component {
             <Route path="/certificate/:certHash" exact component={ScreenCertificate} />
             <Route path="/address/:address" exact component={ScreenCertificate} />
             <Route path="/request/:invoiceSecret" exact component={ScreenRequest} />
+            <Route path="/learn-more" component={ScreenLearnMore} />
             <Route path="/" exact component={ScreenHomePage} />
             <Redirect to="/" />
           </Switch>
