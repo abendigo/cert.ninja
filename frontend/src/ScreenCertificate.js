@@ -27,7 +27,6 @@ export default class ScreenCertificate extends ScreenBase {
       return response.json();
     }).then((json) => {
       this.setState({ certStatus: json, });
-console.log("YEY",json);
     });
   }
 

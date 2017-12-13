@@ -20,6 +20,10 @@ export default class ScreenCertificate extends ScreenBase {
   }
 
   componentWillUnmount() {
+    this.stopFetchInterval();
+  }
+
+  stopFetchInterval() {
     if (this.fetchInvoiceInterval) {
       clearInterval(this.fetchInvoiceInterval);
       delete this.fetchInvoiceInterval;
@@ -38,7 +42,6 @@ export default class ScreenCertificate extends ScreenBase {
       return response.json();
     }).then((json) => {
       this.setState({ invoice: json, }, () => this.invoiceReady());
-console.log("YEY",json);
     });
   }
 
@@ -63,6 +66,8 @@ console.log("YEY",json);
         let tx = localStorage.getItem(`cert-ninja|invoice-tx|${this.state.invoice.invoiceId}`);
         if (tx) this.setState({ paymentTx: tx, });
       }
+
+      if (this.state.invoice.certHash) this.stopFetchInterval();
     } else {
       this.setState({ web3Available: false, });
     }
@@ -70,7 +75,6 @@ console.log("YEY",json);
 
   myRender() {
     if (!this.state.invoice || this.state.web3Available === undefined) return <div>Loading...</div>;
-
 
     if (this.state.invoice.certHash) {
       return (

@@ -40,8 +40,8 @@ export default class ScreenCertifyAddress extends ScreenBase {
       {
         name: 'ethAddr',
         namePretty: 'Ethereum Address',
-        desc: <div>The Ethereum address you wish to certify.</div>,
-        placeholder: 'ethereum address',
+        desc: <div><div>The Ethereum address you wish to certify.</div><div style={{ marginTop: 5, }}><Ant.Tag color="red">IMPORTANT NOTE</Ant.Tag>: We are currently in a beta testing period so please enter a <b>ropsten testnet address</b>.</div></div>,
+        placeholder: 'ropsten testnet ethereum address',
         type: 'input',
         required: true,
       },
@@ -206,7 +206,6 @@ export default class ScreenCertifyAddress extends ScreenBase {
       return response.json();
     }).then((json) => {
       this.setState({ invoiceCreated: true, });
-      console.log("YEY",json);
     });
   }
 }
