@@ -10,8 +10,8 @@ export default class ScreenBase extends React.Component {
 
   render() {
     return (
-      <Ant.Layout.Content style={{ padding: '0 50px' }}>
-        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+      <Ant.Layout.Content style={this.contentStyle()}>
+        <div style={this.containerStyle()}>
           {this.myRender()}
         </div>
       </Ant.Layout.Content>
@@ -21,4 +21,6 @@ export default class ScreenBase extends React.Component {
   // Over-rides
 
   initialState() { return {}; }
+  contentStyle() { return { padding: '0 50px', }; }
+  containerStyle() { return { padding: 24, background: '#fff', minHeight: 360, }; }
 }

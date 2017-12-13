@@ -14,6 +14,9 @@ export default class ScreenHomePage extends ScreenBase {
     };
   }
 
+  contentStyle() { return { display: 'flex', flexDirection: 'column', }; }
+  containerStyle() { return { background: '#fff', flex: 1, alignContent: 'center', display: 'flex', alignItems: 'center', } }
+
   myRender() {
     return (
       <div className="homepage-screen">
@@ -29,7 +32,7 @@ export default class ScreenHomePage extends ScreenBase {
         {this.state.searchError && <span style={{ color: 'red', }}>{this.state.searchError}</span>}
 
         <span>
-          <Link to="/learn-more">What is this?</Link> &mdash; <Link to="/certify-address">Certify your own address!</Link>
+          <Link to="/learn-more">What is Cert Ninja?</Link> &mdash; <Link to="/certify-address">Certify your own address!</Link>
         </span>
       </div>
     );
