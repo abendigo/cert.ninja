@@ -28,7 +28,7 @@ const cnUtils = require('../contract/scripts/cnUtils.js');
 
 let config = yaml.safeLoad(fs.readFileSync('./config.yaml', 'utf8'));
 
-let ethUsd = 45000;
+let ethUsd = 67893;
 
 let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(config.web3Endpoint));
