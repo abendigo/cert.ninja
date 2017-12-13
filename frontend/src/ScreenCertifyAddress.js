@@ -113,7 +113,7 @@ export default class ScreenCertifyAddress extends ScreenBase {
         key: "cost_eth",
         render: (e) => {
           let costCents = this.state.pricing.pricing[e.name] || 0;
-          return "$" + centsToEth(costCents);
+          return "" + centsToEth(costCents);
         },
       }
     ];
