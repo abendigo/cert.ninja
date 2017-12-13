@@ -1,9 +1,14 @@
+* write-up
+* screencast
+
+## Not for demo
+
 * form validation for domain name
 * submit cert hash to blockchain
   * us or user?
-* favicon
 * twilio integration
   * sms validation
   * voice validation
 * mailing address validation
   * lob.com?
+* backup DB
