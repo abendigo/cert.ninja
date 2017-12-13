@@ -387,7 +387,7 @@ app.use(logger());
 app.use(api.routes());
 app.use(api.allowedMethods());
 
-const server = http.createServer(app.callback()).listen(3001, () => {
+const server = http.createServer(app.callback()).listen(3001, '127.0.0.1', () => {
   console.log('SERVER STARTED');
 
   let shutdown = () => {
