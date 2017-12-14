@@ -17,5 +17,4 @@ web3Endpoint: 'http://localhost:8545'
 contractAddr: change-me
 
 #mailgun:
-#  url: 'https://api.mailgun.net/v3/cert.ninja/messages'
 #  apiKey: change-me
