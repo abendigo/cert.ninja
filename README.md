@@ -20,6 +20,7 @@
 * Website notices the invoice was paid by polling chain
 * User initiates the verification steps
 * Once all the steps are completed, website constructs minified, sorted-keys JSON object (J)
+* Website also constructs certificate hash CH = sha3(J)
 * User is notified they are verified
 * User visits https://cert.ninja/address/0xblahblah to see flashy certificate
 * Website hashes J (JH) and sends message to chain with following: (TODO)
