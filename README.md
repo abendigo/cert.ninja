@@ -1,5 +1,8 @@
 # Cert Ninja
 
+This is the code for the [Cert Ninja](https://cert.ninja) application. Cert Ninja is a verification system for Ethereum addresses.
+
+
 ## Application Flow
 
 * Customer (C) visits our website
