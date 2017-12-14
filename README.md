@@ -1,6 +1,6 @@
 # Cert Ninja
 
-## Flow
+## Application Flow
 
 * Customer (C) visits our website
 * C fills out form with following info:
