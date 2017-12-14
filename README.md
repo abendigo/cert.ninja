@@ -9,6 +9,7 @@
   * Corresponding info for each validation type (see below)
 * Website calculates how much each validation method will cost, multiplies by profit factor to get invoice amount (in ETH)
 * Website issues an invoice which contains following:
+  * Contract Address
   * Invoice ID (random 256-bit value)
   * Invoice amount
   * Ethereum address A
@@ -16,16 +17,16 @@
   * r,s,v signature encompassing above values and contract address
 * C submits the invoice to the contract
   * If amount sent == invoice amount, then invoice is marked as paid
-* Website somehow notices the invoice was paid (told by user, polling chain?)
-* Website initiates the verification steps
+* Website notices the invoice was paid by polling chain
+* User initiates the verification steps
 * Once all the steps are completed, website constructs minified, sorted-keys JSON object (J)
-* Website hashes J (JH) and sends message to chain with following:
+* User is notified they are verified
+* User visits https://cert.ninja/address/0xblahblah to see flashy certificate
+* Website hashes J (JH) and sends message to chain with following: (TODO)
   * JH
   * A
-* Website uploads J to IPFS
-* Once tx is mined, user is notified they are verified
-* User visits https://cert.ninja/addr/0xblahblah to see flashy certificate
-* User calls contract to verify that A maps to JH
+* Website uploads J to IPFS (TODO)
+* User calls contract to verify that A maps to JH (TODO)
 
 
 
