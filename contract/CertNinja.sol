@@ -87,14 +87,14 @@ contract CertNinja {
     }
 
     function payInvoice(bytes32 invoiceId, uint amount, uint64 payBy, uint8 v, bytes32 r, bytes32 s) external payable {
-        if (invoicePaid[invoiceId]) revert();
+        require(!invoicePaid[invoiceId]);
 
         uint messageHash = uint(keccak256(this, msg.sender, invoiceId, amount, payBy));
         address signer = ecrecover(keccak256("\x19Ethereum Signed Message:\n32", messageHash), v, r, s);
 
-        if (!admins[signer]) revert();
-        if (amount != msg.value) revert();
-        if (block.timestamp > payBy) revert();
+        require(admins[signer]);
+        require(amount == msg.value);
+        require(block.timestamp <= payBy);
 
         invoicePaid[invoiceId] = true;
         LogInvoicePayment(invoiceId, msg.sender, amount);
